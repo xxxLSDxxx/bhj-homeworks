@@ -1,23 +1,35 @@
-let counter = 0;
-let tabActive = 0;
-let tabContentActive = 0;
-const menu = document.body.querySelectorAll(".tab");
-for (let i = 0; i < menu.length; i++) {
-    menu[i].addEventListener("click", function () {
-        this.classList.add("tab_active");
-        const content = document.body.querySelectorAll('.tab__content');
-        if (counter >= 1) {
-            tabActive.remove("tab_active");
-            tabContentActive.remove("tab__content_active");
-            if (counter > 3) {
-                counter = 0;
-                tabContentActive = 0;
-            }
+let TabsArray = Array.from(document.querySelectorAll('div.tab'));
+let ContentsArray = Array.from(document.querySelectorAll('div.tab__content'));
+let newTab = 0;
 
-        }
-        content[i].classList.add('tab__content_active');
-        tabContentActive = content[i].classList;
-        tabActive = this.classList;
-        counter += 1;
-    })
-}
+function setNewTab(keyCode) {
+    if (keyCode === 39) {
+        newTab === TabsArray.length - 1 ? newTab = 0 : ++newTab;
+    } else if (keyCode === 37) {
+        newTab === 0 ? newTab = TabsArray.length - 1 : --newTab;
+    }
+};
+
+function activateTabAndContent(newTab) {
+    // Deactivate current tab and content
+    document.querySelector('div.tab_active').classList.remove('tab_active');
+    document.querySelector('div.tab__content_active').classList.remove('tab__content_active');
+
+    // New tab and content activate
+    TabsArray[newTab].classList.add('tab_active');
+    ContentsArray[newTab].classList.add('tab__content_active');
+};
+
+// Click event
+TabsArray.forEach(function (item) {
+    item.addEventListener('click', function () {
+        newTab = TabsArray.indexOf(item);
+        activateTabAndContent(newTab);
+    });
+});
+
+// Keyboard event
+addEventListener('keydown', event => {
+    setNewTab(event.keyCode);
+    activateTabAndContent(newTab);
+});
